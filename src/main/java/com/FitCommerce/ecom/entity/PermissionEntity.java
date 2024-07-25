@@ -1,33 +1,25 @@
 package com.FitCommerce.ecom.entity;
 
 
-import com.FitCommerce.ecom.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-@Table(name="users")
-public class User {
+@NoArgsConstructor
+@Entity
+@Table(name="permission")
+public class PermissionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String email;
-
-    private String password;
-
+    //unicos, no nullos y no se puede editar
+    @Column(unique = true, nullable = false, updatable = false)
     private String name;
-
-    private UserRole role;
-
-    @Lob
-    @Column(columnDefinition = "longblob")
-    private byte[] img;
-
 }
