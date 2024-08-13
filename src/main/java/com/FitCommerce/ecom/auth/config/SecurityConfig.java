@@ -1,8 +1,8 @@
-package com.FitCommerce.ecom.config;
+package com.FitCommerce.ecom.auth.config;
 
-import com.FitCommerce.ecom.config.filter.JwtTokenValidator;
-import com.FitCommerce.ecom.service.UserDetailServiceImpl;
-import com.FitCommerce.ecom.utils.JwtUtil;
+import com.FitCommerce.ecom.auth.config.filter.JwtTokenValidator;
+import com.FitCommerce.ecom.auth.service.UserDetailServiceImpl;
+import com.FitCommerce.ecom.auth.utils.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,6 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
+
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtTokenValidator(jwtUtil), BasicAuthenticationFilter.class)

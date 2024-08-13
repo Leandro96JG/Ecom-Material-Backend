@@ -1,7 +1,7 @@
-package com.FitCommerce.ecom.repository;
+package com.FitCommerce.ecom.auth.repository;
 
 
-import com.FitCommerce.ecom.entity.UserEntity;
+import com.FitCommerce.ecom.auth.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

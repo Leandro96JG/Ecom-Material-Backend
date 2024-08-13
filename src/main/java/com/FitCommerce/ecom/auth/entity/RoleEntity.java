@@ -1,6 +1,6 @@
-package com.FitCommerce.ecom.entity;
+package com.FitCommerce.ecom.auth.entity;
 
-import com.FitCommerce.ecom.entity.enums.RoleEnum;
+import com.FitCommerce.ecom.auth.entity.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

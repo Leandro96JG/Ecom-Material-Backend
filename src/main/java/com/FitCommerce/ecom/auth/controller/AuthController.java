@@ -1,9 +1,9 @@
-package com.FitCommerce.ecom.controller;
+package com.FitCommerce.ecom.auth.controller;
 
-import com.FitCommerce.ecom.controller.dto.AuthLoginRequest;
-import com.FitCommerce.ecom.controller.dto.AuthRegisterRequest;
-import com.FitCommerce.ecom.controller.dto.AuthResponse;
-import com.FitCommerce.ecom.service.UserDetailServiceImpl;
+import com.FitCommerce.ecom.auth.controller.dto.AuthLoginRequest;
+import com.FitCommerce.ecom.auth.controller.dto.AuthRegisterRequest;
+import com.FitCommerce.ecom.auth.controller.dto.AuthResponse;
+import com.FitCommerce.ecom.auth.service.UserDetailServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,19 +23,20 @@ public class AuthController {
     }
 
     @GetMapping("/hello")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAuthority('READ')")
     public String hello(){
         return "Tonotos";
     }
 
     @PostMapping("/log-in")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthLoginRequest userRequest){
         return new ResponseEntity<>(this.userDetailService.loginUser(userRequest), HttpStatus.OK);
     }
 
     @PostMapping("/sign-up")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid AuthRegisterRequest userRequest){
-        System.out.println("Nombre del Rol: "+userRequest.roleRequest());
         return new ResponseEntity<>(this.userDetailService.createUser(userRequest),HttpStatus.CREATED);
     }
 }

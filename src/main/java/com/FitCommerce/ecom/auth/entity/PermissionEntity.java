@@ -1,4 +1,4 @@
-package com.FitCommerce.ecom.entity;
+package com.FitCommerce.ecom.auth.entity;
 
 
 import jakarta.persistence.*;

@@ -1,6 +1,6 @@
-package com.FitCommerce.ecom.config.filter;
+package com.FitCommerce.ecom.auth.config.filter;
 
-import com.FitCommerce.ecom.utils.JwtUtil;
+import com.FitCommerce.ecom.auth.utils.JwtUtil;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

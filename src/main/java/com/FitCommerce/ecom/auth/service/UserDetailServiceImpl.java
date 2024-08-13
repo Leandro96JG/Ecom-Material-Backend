@@ -1,14 +1,14 @@
-package com.FitCommerce.ecom.service;
+package com.FitCommerce.ecom.auth.service;
 
-import com.FitCommerce.ecom.controller.dto.AuthLoginRequest;
-import com.FitCommerce.ecom.controller.dto.AuthRegisterRequest;
-import com.FitCommerce.ecom.controller.dto.AuthResponse;
-import com.FitCommerce.ecom.entity.RoleEntity;
-import com.FitCommerce.ecom.entity.UserEntity;
-import com.FitCommerce.ecom.entity.enums.RoleEnum;
-import com.FitCommerce.ecom.repository.RoleRepository;
-import com.FitCommerce.ecom.repository.UserRepository;
-import com.FitCommerce.ecom.utils.JwtUtil;
+import com.FitCommerce.ecom.auth.controller.dto.AuthLoginRequest;
+import com.FitCommerce.ecom.auth.controller.dto.AuthRegisterRequest;
+import com.FitCommerce.ecom.auth.controller.dto.AuthResponse;
+import com.FitCommerce.ecom.auth.entity.RoleEntity;
+import com.FitCommerce.ecom.auth.entity.UserEntity;
+import com.FitCommerce.ecom.auth.entity.enums.RoleEnum;
+import com.FitCommerce.ecom.auth.repository.RoleRepository;
+import com.FitCommerce.ecom.auth.repository.UserRepository;
+import com.FitCommerce.ecom.auth.utils.JwtUtil;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,10 +32,10 @@ import java.util.stream.Collectors;
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
 
-    private  UserRepository userRepository;
-    private JwtUtil jwtUtil;
-    private PasswordEncoder passwordEncoder;
-    private  RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public UserDetailServiceImpl(PasswordEncoder passwordEncoder,
@@ -48,22 +48,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
         this.roleRepository = roleRepository;
     }
 
-    public UserDetailServiceImpl(PasswordEncoder passwordEncoder,
-                                 JwtUtil jwtUtil,
-                                 UserRepository userRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;
-    }
-
-    public UserDetailServiceImpl(UserRepository userRepository, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil;
-    }
-
-    public UserDetailServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -94,6 +78,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         Authentication authentication = this.authenticate(username,password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+//        String rol = this.userRepository
 
         String accessToken = this.jwtUtil.createToken(authentication);
         return new AuthResponse(username,"User loged succesfull",accessToken,true);
@@ -115,7 +100,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
         String username = authRegisterRequest.username();
         String password = authRegisterRequest.password();
         String email = authRegisterRequest.email();
-        List<String> roleRequest = authRegisterRequest.roleRequest().roleListName();
+
+        List<String> roleRequest = new ArrayList<>();
+
+        //metodo para agregar rol desde el userRequest
+//        List<String> roleRequest = authRegisterRequest.roleRequest().roleListName();
+
+        //Agregamos el rol USER por defecto a cada sign up
+        roleRequest.add(RoleEnum.USER.toString());
 
         if (this.userRepository.findUserEntityByUsername(username).isPresent()){
             throw new ValidationException("Username:" + username +" not available, please try another one!");
@@ -124,9 +116,11 @@ public class UserDetailServiceImpl implements UserDetailsService {
         //Convertimos la lista a un set
         Set<RoleEntity> roleEntities = this.roleRepository.findRoleEntitiesByRoleEnumIn(roleRequest).stream()
                 .collect(Collectors.toSet());
+
         if (roleEntities.isEmpty()){
             throw new IllegalArgumentException("The roles specified does not exist.");
         }
+
         UserEntity userEntity = UserEntity.builder()
                 .username(username)
                 .email(email)
@@ -148,5 +142,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
         String accessToken = jwtUtil.createToken(authentication);
         return new AuthResponse(userCreated.getUsername(),"User created successfully",accessToken,true);
     }
+
 
 }

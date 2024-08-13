@@ -1,4 +1,4 @@
-package com.FitCommerce.ecom.controller.dto;
+package com.FitCommerce.ecom.auth.controller.dto;
 
 import jakarta.validation.constraints.Size;
 import lombok.Builder;

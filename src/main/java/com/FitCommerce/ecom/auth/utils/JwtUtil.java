@@ -1,4 +1,4 @@
-package com.FitCommerce.ecom.utils;
+package com.FitCommerce.ecom.auth.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
