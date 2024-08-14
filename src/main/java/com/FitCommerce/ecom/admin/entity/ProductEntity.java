@@ -1,5 +1,6 @@
 package com.FitCommerce.ecom.admin.entity;
 
+import com.FitCommerce.ecom.admin.dto.ProductDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,4 +38,14 @@ public class ProductEntity {
     @JsonIgnore
     private CategoryEntity category;
 
+    public ProductDto getDto(){
+        ProductDto productDto = new ProductDto();
+        productDto.setId(id);
+        productDto.setName(name);
+        productDto.setPrice(price);
+        productDto.setDescription(description);
+        productDto.setByteImg(img);
+        productDto.setCategoryId(category.getId());
+        return productDto;
+    }
 }

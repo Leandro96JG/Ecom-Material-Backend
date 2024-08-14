@@ -6,6 +6,8 @@ import com.FitCommerce.ecom.admin.repository.CategoryRepository;
 import com.FitCommerce.ecom.admin.service.CategoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryServiceImpl implements CategoryService{
 
@@ -20,6 +22,10 @@ public class CategoryServiceImpl implements CategoryService{
         categoryEntity.setName(categoryDto.name());
         categoryEntity.setDescription(categoryDto.description());
         return categoryRepository.save(categoryEntity);
+    }
+
+    public List<CategoryEntity> getAllCategories(){
+        return categoryRepository.findAll();
     }
 
 }
