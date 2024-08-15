@@ -18,14 +18,13 @@ public class ProductDto{
     private String description;
 
 
-    private byte[] byteImg;
-
-
     private String categoryName;
 
 
     private Long categoryId;
 
+
+    private byte[] byteImg;
 
     private MultipartFile img;
 

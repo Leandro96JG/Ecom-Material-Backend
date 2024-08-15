@@ -38,15 +38,5 @@ public class ProductEntity {
     @JsonIgnore
     private CategoryEntity category;
 
-    public ProductDto getDto(){
-        ProductDto productDto = new ProductDto();
-        productDto.setId(id);
-        productDto.setName(name);
-        productDto.setPrice(price);
-        productDto.setDescription(description);
-        productDto.setByteImg(img);
-        productDto.setCategoryId(category.getId());
-        productDto.setCategoryName(category.getName());
-        return productDto;
-    }
+
 }
