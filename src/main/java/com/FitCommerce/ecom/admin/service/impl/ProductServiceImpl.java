@@ -37,5 +37,9 @@ public class ProductServiceImpl implements AdminProductService {
         List<ProductEntity> productEntities = this.productRepository.findAll();
         return productEntities.stream().map(ProductEntity::getDto).toList();
     }
+    public List<ProductDto> getAllProductsByName(String title){
+        List<ProductEntity> productEntities = this.productRepository.findAllByNameContaining(title);
+        return productEntities.stream().map(ProductEntity::getDto).toList();
+    }
 
 }

@@ -21,6 +21,9 @@ public class ProductDto{
     private byte[] byteImg;
 
 
+    private String categoryName;
+
+
     private Long categoryId;
 
 
