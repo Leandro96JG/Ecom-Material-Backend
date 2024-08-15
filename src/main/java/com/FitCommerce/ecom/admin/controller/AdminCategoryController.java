@@ -35,6 +35,7 @@ public class AdminCategoryController {
     }
 
     @GetMapping("/categories")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CategoryEntity>> allCategory(){
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.categoryService.getAllCategories()
