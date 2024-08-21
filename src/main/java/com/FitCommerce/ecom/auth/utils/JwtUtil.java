@@ -65,6 +65,9 @@ public class JwtUtil {
       return decodedJWT.getClaims();
   }
   public String returnClaim(DecodedJWT decodedJWT, String claimName){
+      String claim = decodedJWT.getClaim(claimName).toString();
+
+      System.out.println("claim desde jwt = " + claim);
       return decodedJWT.getClaim(claimName).toString();
   }
 

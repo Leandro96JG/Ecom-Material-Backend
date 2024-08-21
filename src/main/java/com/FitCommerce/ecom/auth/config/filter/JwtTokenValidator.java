@@ -33,14 +33,19 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         //extraemos el headears y el token completo
         String jwtToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+
         if(jwtToken!=null){
             jwtToken = jwtToken.substring(7);
             //validamos el token
             DecodedJWT decodedJWT = jwtUtil.validateToken(jwtToken);
             String username = jwtUtil.extractUserName(decodedJWT);
             String stringAuthorities = jwtUtil.returnClaim(decodedJWT,"authorities");
+            
+            
             Collection<? extends GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(stringAuthorities);
 
+            System.out.println("authorities = " + authorities);
+            
             //almacenamos los datos de autenticacion del user en el contexto de spring security
             SecurityContext context = SecurityContextHolder.getContext();
             Authentication authentication = new UsernamePasswordAuthenticationToken(username,null,authorities);

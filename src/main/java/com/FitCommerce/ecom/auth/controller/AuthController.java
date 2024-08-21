@@ -7,6 +7,7 @@ import com.FitCommerce.ecom.auth.service.UserDetailServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +24,9 @@ public class AuthController {
     }
 
     @GetMapping("/hello")
-    @PreAuthorize("hasAuthority('READ')")
+    @PreAuthorize("hasRole('USER')")
     public String hello(){
-        return "Tonotos";
+        return "Hello Word";
     }
 
     @PostMapping("/log-in")
@@ -37,6 +38,7 @@ public class AuthController {
     @PostMapping("/sign-up")
     @PreAuthorize("permitAll()")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid AuthRegisterRequest userRequest){
-        return new ResponseEntity<>(this.userDetailService.createUser(userRequest),HttpStatus.CREATED);
+
+        return new ResponseEntity<AuthResponse>(this.userDetailService.createUser(userRequest),HttpStatus.CREATED);
     }
 }

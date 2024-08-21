@@ -2,10 +2,7 @@ package com.FitCommerce.ecom.auth.entity;
 
 import com.FitCommerce.ecom.auth.entity.enums.RoleEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;

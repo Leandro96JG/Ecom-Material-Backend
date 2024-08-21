@@ -1,5 +1,8 @@
 package com.FitCommerce.ecom.auth.service;
 
+import com.FitCommerce.ecom.admin.entity.Order;
+import com.FitCommerce.ecom.admin.entity.enums.OrderStatus;
+import com.FitCommerce.ecom.admin.repository.OrderRepository;
 import com.FitCommerce.ecom.auth.controller.dto.AuthLoginRequest;
 import com.FitCommerce.ecom.auth.controller.dto.AuthRegisterRequest;
 import com.FitCommerce.ecom.auth.controller.dto.AuthResponse;
@@ -23,6 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,16 +40,19 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
     public UserDetailServiceImpl(PasswordEncoder passwordEncoder,
                                  JwtUtil jwtUtil,
                                  UserRepository userRepository,
-                                 RoleRepository roleRepository) {
+                                 RoleRepository roleRepository,
+                                 OrderRepository orderRepository) {
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.orderRepository = orderRepository;
     }
 
 
@@ -59,9 +66,13 @@ public class UserDetailServiceImpl implements UserDetailsService {
         userEntity.getRoles()
                 .forEach(role ->authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
 
+
+
         userEntity.getRoles().stream()
                 .flatMap(role -> role.getPermissionList().stream())
                 .forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission.getName())));
+
+
 
         return new User(userEntity.getUsername(),
                 userEntity.getPassword(),
@@ -87,6 +98,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     private Authentication authenticate(String username,String password){
         UserDetails userDetails = this.loadUserByUsername(username);
+
+
+
         if (userDetails == null){
             throw new BadCredentialsException("Invalid username or password");
         }
@@ -103,11 +117,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         List<String> roleRequest = new ArrayList<>();
 
+
+
         //metodo para agregar rol desde el userRequest
 //        List<String> roleRequest = authRegisterRequest.roleRequest().roleListName();
 
         //Agregamos el rol USER por defecto a cada sign up
         roleRequest.add(RoleEnum.USER.toString());
+
 
         if (this.userRepository.findUserEntityByUsername(username).isPresent()){
             throw new ValidationException("Username:" + username +" not available, please try another one!");
@@ -133,11 +150,27 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .build();
 
         UserEntity userCreated = userRepository.save(userEntity);
+
+        Order order = Order.builder()
+                .amount(0L)
+                .totalAmount(0L)
+                .totalAmount(0L)
+                .user(userCreated)
+                .orderStatus(OrderStatus.Pending)
+                .build();
+
+        orderRepository.save(order);
+
+
+
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
         userCreated.getRoles().forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
         userCreated.getRoles().stream()
                 .flatMap(role -> role.getPermissionList().stream())
                 .forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission.getName())));
+
+
+
         Authentication authentication = new UsernamePasswordAuthenticationToken(userCreated.getUsername(),userCreated.getPassword(),authorityList);
         String accessToken = jwtUtil.createToken(authentication);
         return new AuthResponse(userCreated.getUsername(),"User created successfully",accessToken,true);
